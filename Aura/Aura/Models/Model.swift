@@ -1,5 +1,5 @@
 //
-//  UserModel.swift
+//  Model.swift
 //  Aura
 //
 //  Created by Renaud Leroy on 03/06/2025.

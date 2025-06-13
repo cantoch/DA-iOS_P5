@@ -18,34 +18,30 @@ class AuthenticationViewModel: ObservableObject {
     }
     
     func login() {
-        var request = URLRequest(url: URL(string: "http://127.0.0.1:8080/auth")!)
-        request.httpMethod = "POST"
-        
+        let auraApiService = AuraAPIService()
         let body = LoginRequest(username: username, password: password)
+        let method: AuraAPIService.Method = .post
+        let auraKeychainService = AuraKeychainService()
         
-        let jsonData = try! JSONEncoder().encode(body)
-        request.httpBody = jsonData
-        
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")  // Cela indique a l'API que le corps contient du JSON
-        
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            DispatchQueue.main.async {
-                guard let data = data, error == nil else {
-                    return
-                }
-                
-                guard let response = response as? HTTPURLResponse,
-                      response.statusCode == 200 else {
-                    print("mauvais statutcode")
-                    return
-                }
-                
-                do {
-                    let tokenResponse = try JSONDecoder().decode(LoginResponse.self, from: data)
-                } catch {
-                }
-            }
+        guard username.contains("@") else {
+            print("adresse mail non valide")
+            return
         }
-        .resume()
+        
+        Task {
+            let jsonData = try! JSONEncoder().encode(body)
+            let path = try! AuraAPIService().createEndpoint(path: .login)
+            let request = AuraAPIService().createRequest(jsonData: jsonData, endpoint: path, method: method)
+            
+            let response = try await auraApiService.fetchAndDecode(LoginResponse.self, request: request)
+            let token
+            try! auraKeychainService.saveToken(token, key: "\(username)Token")
+            
+        }
+        self.onLoginSucceed()
     }
 }
+
+
+
+
