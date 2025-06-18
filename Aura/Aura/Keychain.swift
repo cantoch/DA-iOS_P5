@@ -31,7 +31,7 @@ class AuraKeychainService: ObservableObject {
             }
         }
     }
-    
+  
     // MARK: - Public Methods
     
     func saveToken(token: String, key: String) throws -> Bool {

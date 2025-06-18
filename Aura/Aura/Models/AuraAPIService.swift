@@ -50,9 +50,8 @@ struct AuraAPIService {
 	func createRequest(parameters: [String: Any]? = nil, jsonData: Data?, endpoint: URL, method: Method) -> URLRequest { //modif parametersNeeded -> parameters
 		var request = URLRequest(url: endpoint)
 		request.httpMethod = method.rawValue
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")   //Code ligne 55 déplacé
 		if parameters != nil {
-//			request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+			request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 			request.httpBody = jsonData
 			return request
 		} else {

@@ -17,28 +17,37 @@ class AuthenticationViewModel: ObservableObject {
         self.onLoginSucceed = callback
     }
     
-    func login() {
+    @MainActor
+    func login() async {
         let auraApiService = AuraAPIService()
-        let body = LoginRequest(username: username, password: password)
-        let method: AuraAPIService.Method = .post
+        let body = AuthRequest(username: username, password: password)
         let auraKeychainService = AuraKeychainService()
         
         guard username.contains("@") else {
-            print("adresse mail non valide")
             return
         }
+        let parameters: [String: Any] = ["username": username, "password": password]
         
         Task {
-            let jsonData = try! JSONEncoder().encode(body)
-            let path = try! AuraAPIService().createEndpoint(path: .login)
-            let request = AuraAPIService().createRequest(jsonData: jsonData, endpoint: path, method: method)
-            
-            let response = try await auraApiService.fetchAndDecode(LoginResponse.self, request: request)
-            let token
-            try! auraKeychainService.saveToken(token, key: "\(username)Token")
-            
+            do {
+                let jsonData = try JSONEncoder().encode(body)
+                let path = try! AuraAPIService().createEndpoint(path: .login)
+                let request = AuraAPIService().createRequest(parameters: parameters, jsonData: jsonData, endpoint: path, method: .post)
+
+                guard let response = try await auraApiService.fetchAndDecode(LoginResponse.self, request: request) else {
+                    return
+                }
+                
+                let token = response.token
+                try auraKeychainService.deleteToken(key: "auth_token")
+                try auraKeychainService.saveToken(token: token, key: "auth_token")
+                
+                print("Login réussi, appel du callback")
+                self.onLoginSucceed()
+            } catch {
+                print("Erreur lors du login : \(error)")
+            }
         }
-        self.onLoginSucceed()
     }
 }
 

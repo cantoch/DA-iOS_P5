@@ -5,7 +5,7 @@
 //  Created by Renaud Leroy on 03/06/2025.
 //
 
-struct LoginRequest: Encodable {
+struct AuthRequest: Encodable { // à renommer
     let username: String
     let password: String
 }
