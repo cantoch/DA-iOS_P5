@@ -42,10 +42,8 @@ class AuthenticationViewModel: ObservableObject {
                 try auraKeychainService.deleteToken(key: "auth_token")
                 try auraKeychainService.saveToken(token: token, key: "auth_token")
                 
-                print("Login réussi, appel du callback")
                 self.onLoginSucceed()
             } catch {
-                print("Erreur lors du login : \(error)")
             }
         }
     }

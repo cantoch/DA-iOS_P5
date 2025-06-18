@@ -13,11 +13,9 @@
 //        Transaction(description: "Starbucks", amount: "-€5.50"),
 //        Transaction(description: "Amazon Purchase", amount: "-€32.99"),
 //        Transaction(description: "Apple Store", amount: "-€28.99"),
-//        Transaction(description: "Amazon Purchase", amount: "-€34.99"),
-//        Transaction(description: "Amazon Purchase", amount: "-€79.99"),
 //        Transaction(description: "Salary", amount: "+€2,500.00")
 //    ]
-//    
+//
 //    struct Transaction {
 //        let description: String
 //        let amount: String
@@ -36,16 +34,16 @@ class AccountDetailViewModel: ObservableObject {
     }
     
     struct Transaction: Decodable {
-        let UUID: String
         let label: String
-        let value: String
+        let value: Double
     }
     
     @MainActor
     func account() {
         let auraKeychainService = AuraKeychainService()
         let auraApiService = AuraAPIService()
-        guard let token = try? auraKeychainService.getToken(key: "auth_token") else { return
+        guard let token = try? auraKeychainService.getToken(key: "auth_token") else {
+            return
         }
         
         Task {
@@ -53,13 +51,12 @@ class AccountDetailViewModel: ObservableObject {
                 let path = try! AuraAPIService().createEndpoint(path: .fetchAccountsDetails)
                 var request = AuraAPIService().createRequest(parameters: nil, jsonData: nil, endpoint: path, method: .get)
                 request.setValue(token, forHTTPHeaderField: "token")
-                
-                guard let response = try await auraApiService.fetchAndDecode(AccountDetail.self, request: request) else { print("reponse de l api incorrecte"); return }
-                
+                guard let response = try await auraApiService.fetchAndDecode(AccountDetail.self, request: request) else { return
+                }
                 self.transactions = response.transactions
                 self.currentBalance = response.currentBalance
-                
-                print(AccountDetail.self)
+            } catch {
+                print(" Erreur réseau ")
             }
         }
     }
