@@ -16,7 +16,7 @@ Une fois Xcode ouvert, cliquez sur le bouton Run comme pour une application iOS 
 La console dans Xcode devrait faire apparaitre le message suivant : 
 
 ```
-[ NOTICE ] Server starting on http://127.0.0.1:8080
+[ NOTICE ] Server starting on http://127.0.0.1:8080 
 ```
 
 

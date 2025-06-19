@@ -20,7 +20,7 @@ class AuthenticationViewModel: ObservableObject {
     @MainActor
     func login() async {
         let auraApiService = AuraAPIService()
-        let body = AuthRequest(username: username, password: password)
+        let body = AuthenticationRequest(username: username, password: password)
         let auraKeychainService = AuraKeychainService()
         
         guard username.contains("@") else {
@@ -34,7 +34,7 @@ class AuthenticationViewModel: ObservableObject {
                 let path = try! AuraAPIService().createEndpoint(path: .login)
                 let request = AuraAPIService().createRequest(parameters: parameters, jsonData: jsonData, endpoint: path, method: .post)
 
-                guard let response = try await auraApiService.fetchAndDecode(LoginResponse.self, request: request) else {
+                guard let response = try await auraApiService.fetchAndDecode(AuthenticationResponse.self, request: request) else {
                     return
                 }
                 

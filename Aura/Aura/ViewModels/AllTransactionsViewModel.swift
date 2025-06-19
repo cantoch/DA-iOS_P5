@@ -1,13 +1,13 @@
 //
-//  AccountDetailViewModel.swift
+//  AllTransactionsViewModel.swift
 //  Aura
 //
-//  Created by Vincent Saluzzo on 29/09/2023.
+//  Created by Renaud Leroy on 18/06/2025.
 //
 
 import Foundation
 
-class AccountDetailViewModel: ObservableObject {
+class AllTransactionsViewModel: ObservableObject {
     @Published var currentBalance: Double = 0.0
     @Published var transactions: [Transaction] = []
     
@@ -22,7 +22,7 @@ class AccountDetailViewModel: ObservableObject {
     }
     
     @MainActor
-    func account() {
+    func allTransactions() {
         let auraKeychainService = AuraKeychainService()
         let auraApiService = AuraAPIService()
         guard let token = try? auraKeychainService.getToken(key: "auth_token") else {
