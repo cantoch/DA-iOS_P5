@@ -13,3 +13,4 @@ struct AuthenticationRequest: Encodable { // à renommer
 struct AuthenticationResponse: Codable {
     let token: String
 }
+

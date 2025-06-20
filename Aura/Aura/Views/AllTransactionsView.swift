@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-
-
 struct AllTransactionsView: View {
     
     @ObservedObject private var viewModel = AllTransactionsViewModel()
@@ -28,26 +26,26 @@ struct AllTransactionsView: View {
                     .frame(height: 40)
                     .foregroundColor(Color(hex: "#94A684"))
             }
+            
+            List(viewModel.transactions, id: \.label) { transaction in
+                HStack {
+                    Image(systemName: transaction.value > 0 ? "arrow.up.right.circle.fill" : "arrow.down.left.circle.fill")
+                        .foregroundColor(transaction.value > 0 ? .green : .red)
+                    Text(transaction.label)
+                    Spacer()
+                    Text(String(format: "%.2f", transaction.value))
+                        .fontWeight(.bold)
+                        .foregroundColor(transaction.value > 0 ? .green : .red)
+                }
+                .padding()
+            }
         }
         .padding(.bottom)
-        List(viewModel.transactions, id: \.label) { transaction in
-            HStack {
-                Image(systemName: transaction.value > 0 ? "arrow.up.right.circle.fill" : "arrow.down.left.circle.fill")
-                    .foregroundColor(transaction.value > 0 ? .green : .red)
-                Text(transaction.label)
-                Spacer()
-                Text(String(format: "%.2f", transaction.value))
-                    .fontWeight(.bold)
-                    .foregroundColor(transaction.value > 0 ? .green : .red)
-            }
-            .padding()
-        }
         .onAppear {
             viewModel.allTransactions()
         }
     }
 }
-
 
 #Preview {
     AllTransactionsView()

@@ -39,7 +39,7 @@ class AccountDetailViewModel: ObservableObject {
                 self.transactions = response.transactions
                 self.currentBalance = response.currentBalance
             } catch {
-                print(" Erreur réseau ")
+                print("Erreur réseau")
             }
         }
     }
