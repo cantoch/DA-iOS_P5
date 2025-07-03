@@ -5,12 +5,14 @@
 //  Created by Renaud Leroy on 03/06/2025.
 //
 
-struct AuthenticationRequest: Encodable { // à renommer
+import Foundation
+
+struct AuthRequest: Encodable {
     let username: String
     let password: String
 }
 
-struct AuthenticationResponse: Codable {
+struct AuthResponse: Codable {
     let token: String
 }
 

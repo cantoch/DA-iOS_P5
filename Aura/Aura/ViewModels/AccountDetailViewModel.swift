@@ -31,7 +31,8 @@ class AccountDetailViewModel: ObservableObject {
         
         Task {
             do {
-                let path = try! AuraAPIService().createEndpoint(path: .fetchAccountsDetails)
+                guard let path = try? AuraAPIService().createEndpoint(path: .fetchAccountsDetails) else {
+                    return }
                 var request = AuraAPIService().createRequest(parameters: nil, jsonData: nil, endpoint: path, method: .get)
                 request.setValue(token, forHTTPHeaderField: "token")
                 guard let response = try await auraApiService.fetchAndDecode(AccountDetail.self, request: request) else { return

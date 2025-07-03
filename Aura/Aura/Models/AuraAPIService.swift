@@ -12,10 +12,12 @@ struct AuraAPIService {
 	
 	//MARK: -Private properties
 	private let session: URLSession
+    private let baseURLString : String
 	
 	//MARK: -Initialization
-	init(session: URLSession = .shared) {
+	init(session: URLSession = .shared, baseURLString: String = "http://127.0.0.1:8080") {
 		self.session = session
+        self.baseURLString = baseURLString
 	}
 	
 	//MARK: -Enumerations
@@ -32,7 +34,7 @@ struct AuraAPIService {
 	
 	//MARK: -Methods
 	func createEndpoint(path: Path) throws -> URL {
-        guard let baseURL = URL(string: "http://127.0.0.1:8080") else {
+        guard let baseURL = URL(string: baseURLString) else {
             throw APIError.invalidURL
         }
 		return baseURL.appendingPathComponent(path.rawValue)
