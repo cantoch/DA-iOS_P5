@@ -44,13 +44,17 @@ class MoneyTransferViewModel: ObservableObject {
                 errorMessage = "Erreur lors du transfert"
             }
         }
-    }
-    
-    func convertToDecimal(_ amount: String) -> Decimal? {
-        guard let amountDecimal = Decimal(string: amount) else {
-            return nil
+        if !recipient.isEmpty && !amount.isEmpty {
+            transferMessage = "Successfully transferred \(amount)€ to \(recipient)"
+        } else {
+            transferMessage = "Please enter recipient and amount."
         }
-        return amountDecimal
+        
+        func convertToDecimal(_ amount: String) -> Decimal? {
+            guard let amountDecimal = Decimal(string: amount) else {
+                return nil
+            }
+            return amountDecimal
+        }
     }
 }
-

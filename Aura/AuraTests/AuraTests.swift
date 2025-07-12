@@ -33,7 +33,7 @@ final class AuraAPIServiceTests: XCTestCase {
             XCTAssertEqual("http://127.0.0.1:8080/auth",url.absoluteString)
         }
         catch {
-            XCTFail("Error \(error)")
+            XCTFail("Error \(APIError.invalidURL)")
         }
     }
     
