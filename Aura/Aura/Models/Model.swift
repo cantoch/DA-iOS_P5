@@ -16,3 +16,10 @@ struct AuthResponse: Codable {
     let token: String
 }
 
+struct AuthResponseMock: Decodable {
+    let currentBalance: Double
+    let transactions: [Transaction]
+}
+
+struct Transaction: Decodable {
+}

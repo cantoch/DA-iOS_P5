@@ -15,6 +15,7 @@ enum MockScenarioAPIService {
 	case serverError
 	case statusCodeError
 	case networkError
+    case emptyData
 }
 
 struct AuraAPIServiceMock {
@@ -86,12 +87,22 @@ struct AuraAPIServiceMock {
 			
 			
 		case .networkError:
-			let error = NSError(domain: NSURLErrorDomain, code: NSURLErrorNotConnectedToInternet, userInfo: [NSLocalizedDescriptionKey: "No Internet Connection"])
+            let error = URLError(.notConnectedToInternet)
 			MockURLProtocol.requestHandler = { request in
 				return (nil, nil, error) // Réponse simulée
 			}
-			
 			return (nil, nil, error)
+            
+            
+        case .emptyData:
+            let response = HTTPURLResponse(url: URL(string: "http://127.0.0.1:8080/account")!,
+                                           statusCode: 200,
+                                           httpVersion: nil,
+                                           headerFields: nil)!
+            MockURLProtocol.requestHandler = { request in
+                return (response, Data(), nil)
+            }
+            return (response, Data(), nil)
 		}
 	}
 }

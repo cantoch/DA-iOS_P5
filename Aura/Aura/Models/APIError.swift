@@ -16,6 +16,7 @@ enum APIError: LocalizedError, Equatable {
 	case noData
 	case unauthorized
 	case decodingError
+    case networkError
 
 	var errorDescription: String? {
 		switch self {
@@ -33,6 +34,8 @@ enum APIError: LocalizedError, Equatable {
 			return "You are not authorized to perform this action."
 		case .decodingError:
 			return "Decoding error."
+        case .networkError:
+            return "Network error."
 		}
 	}
 }
