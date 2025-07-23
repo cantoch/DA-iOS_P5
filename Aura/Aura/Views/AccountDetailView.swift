@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AccountDetailView: View {
-    @ObservedObject var viewModel: AccountDetailViewModel
+    @ObservedObject var viewModel: AccountViewModel
     @State var showAllTransactionsView: Bool = false
     
     var body: some View {
@@ -73,16 +73,18 @@ struct AccountDetailView: View {
                 self.endEditing(true)  // This will dismiss the keyboard when tapping outside
             }
             .onAppear {
-                viewModel.account()
+                Task {
+                    await viewModel.account()
+                }
             }
             .navigationDestination(isPresented: $showAllTransactionsView) {
-                AllTransactionsView()
+                AllTransactionsView(viewModel: AllTransactionsViewModel(keychainService: AuraKeychainService(), apiService: AuraAPIService()))
             }
         }
     }
 }
 
-#Preview {
-    AccountDetailView(viewModel: AccountDetailViewModel())
-}
+//#Preview {
+//    AccountDetailView(viewModel: AccountDetailViewModel())
+//}
 

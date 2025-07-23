@@ -16,7 +16,7 @@
 		53D418952AC70ABF0070ADB1 /* MoneyTransferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D418942AC70ABF0070ADB1 /* MoneyTransferView.swift */; };
 		53D418992AC70FD80070ADB1 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D418982AC70FD80070ADB1 /* Color+Extensions.swift */; };
 		53D4189B2AC711990070ADB1 /* AuthenticationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D4189A2AC711990070ADB1 /* AuthenticationViewModel.swift */; };
-		53D4189D2AC715AA0070ADB1 /* AccountDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D4189C2AC715AA0070ADB1 /* AccountDetailViewModel.swift */; };
+		53D4189D2AC715AA0070ADB1 /* AccountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D4189C2AC715AA0070ADB1 /* AccountViewModel.swift */; };
 		53D4189F2AC717890070ADB1 /* MoneyTransferViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D4189E2AC717890070ADB1 /* MoneyTransferViewModel.swift */; };
 		53D418A12AC71B8F0070ADB1 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53D418A02AC71B8F0070ADB1 /* View+Extensions.swift */; };
 		9AA8ED172DF72FE400AAB55B /* AuraKeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AA8ED162DF72FD700AAB55B /* AuraKeychainService.swift */; };
@@ -45,7 +45,7 @@
 		53D418942AC70ABF0070ADB1 /* MoneyTransferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyTransferView.swift; sourceTree = "<group>"; };
 		53D418982AC70FD80070ADB1 /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
 		53D4189A2AC711990070ADB1 /* AuthenticationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewModel.swift; sourceTree = "<group>"; };
-		53D4189C2AC715AA0070ADB1 /* AccountDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailViewModel.swift; sourceTree = "<group>"; };
+		53D4189C2AC715AA0070ADB1 /* AccountViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewModel.swift; sourceTree = "<group>"; };
 		53D4189E2AC717890070ADB1 /* MoneyTransferViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyTransferViewModel.swift; sourceTree = "<group>"; };
 		53D418A02AC71B8F0070ADB1 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		9A6DDA352E143C7C00953A4B /* AuraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AuraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -134,7 +134,7 @@
 			children = (
 				53D4188C2AC709F40070ADB1 /* AppViewModel.swift */,
 				53D4189A2AC711990070ADB1 /* AuthenticationViewModel.swift */,
-				53D4189C2AC715AA0070ADB1 /* AccountDetailViewModel.swift */,
+				53D4189C2AC715AA0070ADB1 /* AccountViewModel.swift */,
 				53D4189E2AC717890070ADB1 /* MoneyTransferViewModel.swift */,
 				9AA8ED422E03520900AAB55B /* AllTransactionsViewModel.swift */,
 			);
@@ -263,7 +263,7 @@
 				53D4189B2AC711990070ADB1 /* AuthenticationViewModel.swift in Sources */,
 				9AA8ED3F2E0350F400AAB55B /* AllTransactionsView.swift in Sources */,
 				9AA8ED432E03520900AAB55B /* AllTransactionsViewModel.swift in Sources */,
-				53D4189D2AC715AA0070ADB1 /* AccountDetailViewModel.swift in Sources */,
+				53D4189D2AC715AA0070ADB1 /* AccountViewModel.swift in Sources */,
 				53D418912AC70A920070ADB1 /* AuthenticationView.swift in Sources */,
 				9AA8ED172DF72FE400AAB55B /* AuraKeychainService.swift in Sources */,
 				53D418932AC70AB10070ADB1 /* AccountDetailView.swift in Sources */,

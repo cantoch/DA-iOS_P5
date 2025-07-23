@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AllTransactionsView: View {
     
-    @ObservedObject private var viewModel = AllTransactionsViewModel()
+    @ObservedObject var viewModel: AllTransactionsViewModel
     
     var body: some View {
         VStack(spacing: 20) {
@@ -42,11 +42,13 @@ struct AllTransactionsView: View {
         }
         .padding(.bottom)
         .onAppear {
-            viewModel.allTransactions()
+            Task {
+                await viewModel.allTransactions()
+            }
         }
     }
 }
 
-#Preview {
-    AllTransactionsView()
-}
+//#Preview {
+//    AllTransactionsView()
+//}

@@ -20,7 +20,7 @@ class AppViewModel: ObservableObject {
         }
     }
     
-    var accountDetailViewModel: AccountDetailViewModel {
-        return AccountDetailViewModel()
+    var accountViewModel: AccountViewModel {
+        return AccountViewModel(keychainService: AuraKeychainService(), apiService: AuraAPIService())
     }
 }

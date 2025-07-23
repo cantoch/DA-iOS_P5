@@ -7,21 +7,41 @@
 
 import Foundation
 
+protocol AuraAPIServiceProtocol {
+    func createEndpoint(path: AuraAPIService.Path) throws -> URL
+    func createRequest(parameters: [String: Any]?, jsonData: Data?, endpoint: URL, method: AuraAPIService.Method) -> URLRequest
+    func fetchAndDecode<T: Decodable>(_ type: T.Type, request: URLRequest, allowEmptyData: Bool) async throws -> T?
+}
+
+protocol AuraKeychainServiceProtocol {
+    func saveToken(token: String, key: String) throws -> Bool
+    func deleteToken(key: String) throws -> Bool
+    func getToken(key: String) throws -> String?
+}
+
+extension AuraAPIService: AuraAPIServiceProtocol {}
+
+extension AuraKeychainService: AuraKeychainServiceProtocol {}
+
 class AuthenticationViewModel: ObservableObject {
     @Published var username: String = ""
     @Published var password: String = ""
     
-    let onLoginSucceed: (() -> ())   // ?????
+    private let apiService: AuraAPIServiceProtocol
+    private let keychainService: AuraKeychainServiceProtocol
     
-    init(_ callback: @escaping () -> ()) {
-        self.onLoginSucceed = callback
+    private let onLoginSucceed: (() -> ())
+    
+    init(apiService: AuraAPIServiceProtocol = AuraAPIService(), keychainService: AuraKeychainServiceProtocol = AuraKeychainService(), onLoginSucceed: @escaping () -> Void) {
+        self.apiService = apiService
+        self.keychainService = keychainService
+        self.onLoginSucceed = onLoginSucceed
     }
+    
     
     @MainActor
     func login() async {
-        let auraApiService = AuraAPIService()
         let body = AuthRequest(username: username, password: password)
-        let auraKeychainService = AuraKeychainService()
         
         guard username.contains("@"), !password.isEmpty else {
             return
@@ -30,17 +50,17 @@ class AuthenticationViewModel: ObservableObject {
         
         do {
             let jsonData = try JSONEncoder().encode(body)
-            guard let path = try? auraApiService.createEndpoint(path: .login) else {
+            guard let path = try? apiService.createEndpoint(path: .login) else {
                 return
             }
-            let request = auraApiService.createRequest(parameters: parameters, jsonData: jsonData, endpoint: path, method: .post)
+            let request = apiService.createRequest(parameters: parameters, jsonData: jsonData, endpoint: path, method: .post)
             
-            guard let response = try await auraApiService.fetchAndDecode(AuthResponse.self, request: request) else {
+            guard let response = try await apiService.fetchAndDecode(AuthResponse.self, request: request, allowEmptyData: false) else {
                 return
             }
             let token = response.token
-            try auraKeychainService.deleteToken(key: "auth_token")
-            try auraKeychainService.saveToken(token: token, key: "auth_token")
+            try keychainService.deleteToken(key: "auth_token")
+            try keychainService.saveToken(token: token, key: "auth_token")
             
             self.onLoginSucceed()
         } catch {

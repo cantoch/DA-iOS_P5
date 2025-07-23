@@ -21,5 +21,19 @@ struct AuthResponseMock: Decodable {
     let transactions: [Transaction]
 }
 
-struct Transaction: Decodable {
+struct AccountDetail : Decodable {
+    let transactions: [Transaction]
+    let currentBalance: Double
 }
+
+struct Transaction: Decodable, Equatable {
+    let label: String
+    let value: Double
+}
+
+struct TransferRequest: Encodable {
+    let recipient : String
+    let amount : Decimal
+}
+
+struct EmptyResponse: Decodable {}
