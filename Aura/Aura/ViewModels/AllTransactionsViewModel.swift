@@ -22,7 +22,7 @@ class AllTransactionsViewModel: ObservableObject {
     
     @MainActor
     func allTransactions() async {
-        guard let token = try? await keychainService.getToken(key: "auth_token") else {
+        guard let token = try? keychainService.getToken(key: "auth_token") else {
             return
         }
         

@@ -8,9 +8,20 @@ import Foundation
 @testable import Aura
 
 final class MockAPIService: AuraAPIServiceProtocol {
-    var shouldReturnError = false
-    var mockToken = "mock_token"
-    var mockResponse: Any?
+
+    var scenario: MockScenario
+    
+    enum MockScenario {
+        case success
+        case decodingError
+        case noToken
+        case httpError
+        case noData
+    }
+    
+    init (scenario: MockScenario = .success) {
+        self.scenario = scenario
+    }
     
     func createEndpoint(path: AuraAPIService.Path) throws -> URL {
         return URL(string: "http://127.0.0.1:8080/auth")!
@@ -21,21 +32,29 @@ final class MockAPIService: AuraAPIServiceProtocol {
     }
     
     func fetchAndDecode<T>(_ type: T.Type, request: URLRequest, allowEmptyData: Bool) async throws -> T? where T : Decodable {
-        if shouldReturnError {
+        switch scenario {
+        case .success:
+            if type == AuthResponse.self {
+                let mockResponse = AuthResponse(token: "mock_token")
+                return mockResponse as? T
+            } else if type == AccountDetail.self {
+                let mockResponse = AccountDetail(
+                    transactions: [
+                        Transaction(label: "Payment1", value: 150.0),
+                        Transaction(label: "Payment2", value: 500.0)
+                    ],
+                    currentBalance: 650.0
+                )
+                return mockResponse as? T
+            }
+        case .decodingError:
             throw APIError.decodingError
-        }
-        if type == AccountDetail.self {
-            let mockResponse = AccountDetail(
-                transactions: [
-                    Transaction(label: "Payment1", value: 150.0),
-                    Transaction(label: "Payment2", value: 500.0)
-                ],
-                currentBalance: 650.0
-            )
-            return mockResponse as? T
-        } else if type == AuthResponse.self {
-            let mockResponse = AuthResponse(token: mockToken)
-            return mockResponse as? T
+        case .noToken:
+            return nil
+        case .httpError:
+            throw APIError.httpError(statusCode: 500)
+        case .noData:
+            return nil
         }
         return nil
     }

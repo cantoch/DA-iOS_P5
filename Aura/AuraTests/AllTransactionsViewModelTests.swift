@@ -9,17 +9,29 @@ import XCTest
 @testable import Aura
 
 class AllTransactionsViewModelTests: XCTestCase {
+    var viewModel: AllTransactionsViewModel!
+    var apiService: MockAPIService!
+    var keychainService: MockKeychainService!
     
-    func testAllTransactionsSuccess() async {
-        let keychainService = MockKeychainService()
-        let apiService = MockAPIService()
-        keychainService.saved["auth_token"] = "mock_token"
-        
-        let viewModel = AllTransactionsViewModel(
+    override func setUp() {
+        super.setUp()
+        apiService = MockAPIService()
+        keychainService = MockKeychainService()
+        keychainService.saved["auth_token"] = "mock_token" // Par défaut, un token
+        viewModel = AllTransactionsViewModel(
             keychainService: keychainService,
             apiService: apiService
         )
-        
+    }
+    
+    override func tearDown() {
+        viewModel = nil
+        apiService = nil
+        keychainService = nil
+        super.tearDown()
+    }
+    
+    func testAllTransactionsSuccess() async {        
         let mockTransactions = [
             Transaction(label: "Payment1", value: 150.0),
             Transaction(label: "Payment2", value: 500.0)
@@ -29,6 +41,33 @@ class AllTransactionsViewModelTests: XCTestCase {
         
         XCTAssertEqual(viewModel.transactions, mockTransactions)
         XCTAssertEqual(viewModel.currentBalance, mockBalance)
+    }
+ 
+    func testAllTransactionsFailsWhenNoToken() async {
+        apiService.scenario = .noToken
+        
+        await viewModel.allTransactions()
+        
+        XCTAssertTrue(viewModel.transactions.isEmpty)
+        XCTAssertEqual(viewModel.currentBalance, 0.0)
+    }
+    
+    func testAllTransactionsFailsOnAPIDecodingError() async {
+        apiService.scenario = .decodingError
+        
+        await viewModel.allTransactions()
+        
+        XCTAssertTrue(viewModel.transactions.isEmpty)
+        XCTAssertEqual(viewModel.currentBalance, 0.0)
+    }
+    
+    func testAllTransactionsFailsWhenAPIReturnsNil() async {
+        apiService.scenario = .noData
+        
+        await viewModel.allTransactions()
+        
+        XCTAssertTrue(viewModel.transactions.isEmpty)
+        XCTAssertEqual(viewModel.currentBalance, 0.0)
     }
 }
 

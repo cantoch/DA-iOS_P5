@@ -9,21 +9,62 @@ import XCTest
 
 final class AuthenticationViewModelTests: XCTestCase {
     
+    var viewModel: AuthenticationViewModel!
+    var mockAPIService: MockAPIService!
+    var mockKeychainService: MockKeychainService!
+    var loginDidSucceed: Bool!
+    
+    override func setUp() {
+        super.setUp()
+        loginDidSucceed = false
+        mockAPIService = MockAPIService()
+        mockKeychainService = MockKeychainService()
+        viewModel = AuthenticationViewModel(
+            apiService: mockAPIService,
+            keychainService: mockKeychainService,
+            onLoginSucceed: { [weak self] in self?.loginDidSucceed = true }
+        )
+    }
+    
+    override func tearDown() {
+        super.tearDown()
+        viewModel = nil
+        mockAPIService = nil
+        mockKeychainService = nil
+        loginDidSucceed = false
+    }
+    
     func testLoginSuccessCallsCallbackAndStoresToken() async {
-        let apiService = MockAPIService()
-        let keychainService = MockKeychainService()
-        var loginSuccess = false
-        
-        let viewModel = AuthenticationViewModel(
-            apiService: apiService,
-            keychainService: keychainService
-        ) {
-            loginSuccess = true
-        }
         viewModel.username = "user@example.com"
         viewModel.password = "securepassword"
         await viewModel.login()
-        XCTAssertTrue(loginSuccess)
-        XCTAssertEqual(keychainService.saved["auth_token"], "mock_token")
+        XCTAssertTrue(loginDidSucceed)
+        XCTAssertEqual(mockKeychainService.saved["auth_token"], "mock_token")
+    }
+    
+    func testLoginFailedWithInvalidEmail() async {
+        viewModel.username = "toto"
+        viewModel.password = "securepassword"
+        await viewModel.login()
+        XCTAssertFalse(loginDidSucceed)
+        XCTAssertTrue(mockKeychainService.saved.isEmpty)
+    }
+    
+    func testLoginFailedWhenApiReturnNil() async {
+        mockAPIService.scenario = .noToken
+        viewModel.username = "user@example.com"
+        viewModel.password = "securepassword"
+        await viewModel.login()
+        XCTAssertFalse(loginDidSucceed)
+        XCTAssertTrue(mockKeychainService.saved.isEmpty)
+    }
+    
+    func testLoginFailedWhenDecodingError() async {
+        mockAPIService.scenario = .decodingError
+        viewModel.username = "user@example.com"
+        viewModel.password = "securepassword"
+        await viewModel.login()
+        XCTAssertFalse(loginDidSucceed)
+        XCTAssertTrue(mockKeychainService.saved.isEmpty)
     }
 }

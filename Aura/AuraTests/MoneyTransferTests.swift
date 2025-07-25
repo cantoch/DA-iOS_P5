@@ -7,22 +7,64 @@
 
 import XCTest
 @testable import Aura
- 
+
 final class MoneyTransferTests: XCTestCase {
-    func testMoneyTransferSuccess() async {
-        let apiService = MockAPIService()
-        let keychainService = MockKeychainService()
+    var apiService: MockAPIService!
+    var keychainService: MockKeychainService!
+    var viewModel: MoneyTransferViewModel!
+    
+    override func setUp() {
+        super.setUp()
+        apiService = MockAPIService()
+        keychainService = MockKeychainService()
         keychainService.saved["auth_token"] = "mock_token"
-        
-        let viewModel = MoneyTransferViewModel(
+        viewModel = MoneyTransferViewModel(
             keychainService: keychainService,
             apiService: apiService
         )
+    }
+    
+    override func tearDown() {
+        apiService = nil
+        keychainService = nil
+        viewModel = nil
+        super.tearDown()
+    }
+    
+    func testMoneyTransferSuccess() async {
         viewModel.amount = "100"
         viewModel.recipient = "bibi"
         
         await viewModel.sendMoney()
-     
+        
         XCTAssertEqual(viewModel.transferMessage, "Successfully transferred 100€ to bibi")
+    }
+    
+    func testMoneyTransferFailsWithInvalidAmountFormat() async {
+        viewModel.amount = "toto"
+        viewModel.recipient = "bibi"
+        
+        await viewModel.sendMoney()
+        
+        XCTAssertEqual(viewModel.errorMessage, "Erreur de format")
+    }
+    
+    func testMoneyTransferFailsWithoutToken() async {
+        keychainService.saved["auth_token"] = nil
+        viewModel.amount = "100"
+        viewModel.recipient = "bibi"
+        
+        await viewModel.sendMoney()
+        
+        XCTAssertEqual(viewModel.errorMessage, "Echec d'identification")
+    }
+    func testMoneyTransferFailsOnAPIError() async {
+        apiService.scenario = .httpError
+        viewModel.amount = "100"
+        viewModel.recipient = "bibi"
+        
+        await viewModel.sendMoney()
+        
+        XCTAssertEqual(viewModel.errorMessage, "Erreur lors du transfert")
     }
 }

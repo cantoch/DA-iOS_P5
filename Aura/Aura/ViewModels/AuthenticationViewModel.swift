@@ -38,7 +38,6 @@ class AuthenticationViewModel: ObservableObject {
         self.onLoginSucceed = onLoginSucceed
     }
     
-    
     @MainActor
     func login() async {
         let body = AuthRequest(username: username, password: password)
