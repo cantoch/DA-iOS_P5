@@ -14,7 +14,6 @@ struct MoneyTransferView: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            // Adding a fun header image
             Image(systemName: "arrow.right.arrow.left.circle.fill")
                 .resizable()
                 .scaledToFit()
@@ -68,7 +67,6 @@ struct MoneyTransferView: View {
             }
             .buttonStyle(PlainButtonStyle())
             
-            // Message
             if !viewModel.transferMessage.isEmpty {
                 Text(viewModel.transferMessage)
                     .padding(.top, 20)
@@ -79,12 +77,7 @@ struct MoneyTransferView: View {
         }
         .padding()
         .onTapGesture {
-            self.endEditing(true)  // This will dismiss the keyboard when tapping outside
+            self.endEditing(true)
         }
     }
 }
-
-
-//#Preview {
-//    MoneyTransferView()
-//}

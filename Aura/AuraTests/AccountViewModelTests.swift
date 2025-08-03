@@ -17,7 +17,7 @@ final class AccountViewModelTests: XCTestCase {
         super.setUp()
         apiService = MockAPIService()
         keychainService = MockKeychainService()
-        keychainService.saved["auth_token"] = "mock_token" // Par défaut, un token
+        keychainService.saved["auth_token"] = "mock_token" 
         viewModel = AccountViewModel(
             keychainService: keychainService,
             apiService: apiService

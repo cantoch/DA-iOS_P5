@@ -13,13 +13,12 @@ struct AllTransactionsView: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            // Large Header displaying total amount
             VStack(spacing: 10) {
                 Text("Your Balance")
                     .font(.headline)
                 Text(String(format: "%.2f", viewModel.currentBalance))
                     .font(.system(size: 30, weight: .bold))
-                    .foregroundColor(Color(hex: "#94A684")) // Using the green color you provided
+                    .foregroundColor(Color(hex: "#94A684"))
                 Image(systemName: "eurosign.circle.fill")
                     .resizable()
                     .scaledToFit()
@@ -48,7 +47,3 @@ struct AllTransactionsView: View {
         }
     }
 }
-
-//#Preview {
-//    AllTransactionsView()
-//}

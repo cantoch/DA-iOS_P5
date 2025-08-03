@@ -17,7 +17,7 @@ class AllTransactionsViewModelTests: XCTestCase {
         super.setUp()
         apiService = MockAPIService()
         keychainService = MockKeychainService()
-        keychainService.saved["auth_token"] = "mock_token" // Par défaut, un token
+        keychainService.saved["auth_token"] = "mock_token"
         viewModel = AllTransactionsViewModel(
             keychainService: keychainService,
             apiService: apiService

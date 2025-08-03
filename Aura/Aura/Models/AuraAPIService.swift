@@ -76,15 +76,15 @@ struct AuraAPIService {
                 throw APIError.httpError(statusCode: httpResponse.statusCode)
             }
             return data
-        } catch let error as URLError {
+        } catch _ as URLError {
             throw APIError.networkError
         }
     }
     
     
     
-    func decode<T: Decodable>(_ type: T.Type, data: Data) throws -> T? { //T est décodable
-        guard let responseJSON = try? JSONDecoder().decode(T.self, from: data) else { //T: plusieurs types possibles : [String, String], AccountResponse
+    func decode<T: Decodable>(_ type: T.Type, data: Data) throws -> T? {
+        guard let responseJSON = try? JSONDecoder().decode(T.self, from: data) else { 
             throw APIError.decodingError
         }
         return responseJSON
