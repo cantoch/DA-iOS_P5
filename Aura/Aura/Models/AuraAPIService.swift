@@ -49,7 +49,7 @@ struct AuraAPIService {
     }
     
     //requête
-    func createRequest(parameters: [String: Any]? = nil, jsonData: Data?, endpoint: URL, method: Method) -> URLRequest { //modif parametersNeeded -> parameters
+    func createRequest(parameters: [String: Any]? = nil, jsonData: Data?, endpoint: URL, method: Method) -> URLRequest { 
         var request = URLRequest(url: endpoint)
         request.httpMethod = method.rawValue
         if parameters != nil {

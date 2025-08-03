@@ -58,8 +58,8 @@ class AuthenticationViewModel: ObservableObject {
                 return
             }
             let token = response.token
-            try keychainService.deleteToken(key: "auth_token")
-            try keychainService.saveToken(token: token, key: "auth_token")
+            _ = try keychainService.deleteToken(key: "auth_token")
+            _ = try keychainService.saveToken(token: token, key: "auth_token")
             
             self.onLoginSucceed()
         } catch {
