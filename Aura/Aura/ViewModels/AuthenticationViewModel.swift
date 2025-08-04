@@ -20,6 +20,7 @@ protocol AuraKeychainServiceProtocol {
 }
 
 extension AuraAPIService: AuraAPIServiceProtocol {}
+
 extension AuraKeychainService: AuraKeychainServiceProtocol {}
 
 class AuthenticationViewModel: ObservableObject {
@@ -59,7 +60,6 @@ class AuthenticationViewModel: ObservableObject {
             let token = response.token
             _ = try keychainService.deleteToken(key: "auth_token")
             _ = try keychainService.saveToken(token: token, key: "auth_token")
-            
             self.onLoginSucceed()
         } catch {
             print("Erreur lors du login")
