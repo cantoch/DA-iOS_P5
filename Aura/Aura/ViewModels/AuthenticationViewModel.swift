@@ -20,7 +20,6 @@ protocol AuraKeychainServiceProtocol {
 }
 
 extension AuraAPIService: AuraAPIServiceProtocol {}
-
 extension AuraKeychainService: AuraKeychainServiceProtocol {}
 
 class AuthenticationViewModel: ObservableObject {

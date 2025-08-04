@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct AuthenticationView: View {
-    
     @State private var username: String = ""
     @State private var password: String = ""
     
@@ -18,7 +17,6 @@ struct AuthenticationView: View {
     @ObservedObject var viewModel: AuthenticationViewModel
     
     var body: some View {
-        
         ZStack {
             LinearGradient(gradient: Gradient(colors: [gradientStart, gradientEnd]), startPoint: .top, endPoint: .bottomLeading)
                 .edgesIgnoringSafeArea(.all)

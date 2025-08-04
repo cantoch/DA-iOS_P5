@@ -33,7 +33,6 @@ class MoneyTransferViewModel: ObservableObject {
         
         guard let token = try? keychainService.getToken(key: "auth_token") else {
             errorMessage = "Echec d'identification"
-            transferMessage = ""
             return
         }
         
@@ -43,14 +42,10 @@ class MoneyTransferViewModel: ObservableObject {
             var request = apiService.createRequest(parameters: nil, jsonData: nil, endpoint: path, method: .post)
             request.setValue(token, forHTTPHeaderField: "token")
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            request.httpBody = jsonData
-            
             _ = try await apiService.fetchAndDecode(EmptyResponse.self, request: request, allowEmptyData: true)
-            
             transferMessage = "Successfully transferred \(amount)€ to \(recipient)"
         } catch {
             errorMessage = "Erreur lors du transfert"
-            transferMessage = ""
         }
     }
     

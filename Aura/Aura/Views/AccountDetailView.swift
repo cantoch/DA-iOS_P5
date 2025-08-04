@@ -47,7 +47,7 @@ struct AccountDetailView: View {
                         .padding([.horizontal])
                     }
                 }
-                Button(action: {showAllTransactionsView.toggle()
+                Button(action: {showAllTransactionsView.toggle()   
                 }) {
                     HStack {
                         Image(systemName: "list.bullet")

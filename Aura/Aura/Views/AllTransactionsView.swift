@@ -25,7 +25,6 @@ struct AllTransactionsView: View {
                     .frame(height: 40)
                     .foregroundColor(Color(hex: "#94A684"))
             }
-            
             List(viewModel.transactions, id: \.label) { transaction in
                 HStack {
                     Image(systemName: transaction.value > 0 ? "arrow.up.right.circle.fill" : "arrow.down.left.circle.fill")

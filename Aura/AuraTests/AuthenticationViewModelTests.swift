@@ -37,7 +37,9 @@ final class AuthenticationViewModelTests: XCTestCase {
     func testLoginSuccessCallsCallbackAndStoresToken() async {
         viewModel.username = "user@example.com"
         viewModel.password = "securepassword"
+        
         await viewModel.login()
+        
         XCTAssertTrue(loginDidSucceed)
         XCTAssertEqual(mockKeychainService.saved["auth_token"], "mock_token")
     }
@@ -45,7 +47,9 @@ final class AuthenticationViewModelTests: XCTestCase {
     func testLoginFailedWithInvalidEmail() async {
         viewModel.username = "toto"
         viewModel.password = "securepassword"
+        
         await viewModel.login()
+        
         XCTAssertFalse(loginDidSucceed)
         XCTAssertTrue(mockKeychainService.saved.isEmpty)
     }
@@ -54,7 +58,9 @@ final class AuthenticationViewModelTests: XCTestCase {
         mockAPIService.scenario = .noToken
         viewModel.username = "user@example.com"
         viewModel.password = "securepassword"
+        
         await viewModel.login()
+        
         XCTAssertFalse(loginDidSucceed)
         XCTAssertTrue(mockKeychainService.saved.isEmpty)
     }
@@ -63,7 +69,9 @@ final class AuthenticationViewModelTests: XCTestCase {
         mockAPIService.scenario = .decodingError
         viewModel.username = "user@example.com"
         viewModel.password = "securepassword"
+        
         await viewModel.login()
+        
         XCTAssertFalse(loginDidSucceed)
         XCTAssertTrue(mockKeychainService.saved.isEmpty)
     }

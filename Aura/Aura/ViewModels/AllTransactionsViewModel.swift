@@ -25,14 +25,14 @@ class AllTransactionsViewModel: ObservableObject {
         guard let token = try? keychainService.getToken(key: "auth_token") else {
             return
         }
-        
         do {
             guard let path = try? apiService.createEndpoint(path: .fetchAccountsDetails) else {
-                return }
-            
+                return
+            }
             var request = apiService.createRequest(parameters: nil, jsonData: nil, endpoint: path, method: .get)
             request.setValue(token, forHTTPHeaderField: "token")
-            guard let response = try await apiService.fetchAndDecode(AccountDetail.self, request: request, allowEmptyData: false ) else { return
+            guard let response = try await apiService.fetchAndDecode(AccountDetail.self, request: request, allowEmptyData: false ) else {
+                return
             }
             self.transactions = response.transactions
             self.currentBalance = response.currentBalance

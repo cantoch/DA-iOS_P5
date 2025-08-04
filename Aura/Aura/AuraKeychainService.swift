@@ -31,7 +31,7 @@ class AuraKeychainService: ObservableObject {
             }
         }
     }
-  
+    
     // MARK: - Public Methods
     
     func saveToken(token: String, key: String) throws -> Bool {
@@ -43,10 +43,10 @@ class AuraKeychainService: ObservableObject {
         
         let tokenData = token.data(using: .utf8)!
         query[kSecValueData as String] = tokenData
-
+        
         var existingItem: CFTypeRef?
         let status: OSStatus = SecItemCopyMatching(query as CFDictionary, &existingItem)
-        
+
         if status == errSecSuccess {
             throw KeychainError.duplicateItem
         }
@@ -55,7 +55,6 @@ class AuraKeychainService: ObservableObject {
         guard addStatus == errSecSuccess else {
             throw KeychainError.unexpectedStatus(addStatus)
         }
-        
         return true
     }
     
@@ -78,13 +77,12 @@ class AuraKeychainService: ObservableObject {
         guard status == errSecSuccess else {
             throw KeychainError.unexpectedStatus(status)
         }
-        
+
         guard let item = item as? [String: Any],
               let tokenData = item[kSecValueData as String] as? Data,
               let token = String(data: tokenData, encoding: .utf8) else {
             throw KeychainError.unexpectedData
         }
-        
         return token
     }
     
@@ -99,7 +97,6 @@ class AuraKeychainService: ObservableObject {
         guard status == errSecSuccess || status == errSecItemNotFound else {
             throw KeychainError.unexpectedStatus(status)
         }
-        
         return true
     }
 }

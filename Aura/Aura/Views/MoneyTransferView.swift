@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct MoneyTransferView: View {
-    @ObservedObject var viewModel = MoneyTransferViewModel(keychainService: AuraKeychainService(), apiService: AuraAPIService())
+    @ObservedObject var viewModel = MoneyTransferViewModel(
+        keychainService: AuraKeychainService(),
+        apiService: AuraAPIService())
     
     @State private var animationScale: CGFloat = 1.0
     
@@ -26,11 +28,9 @@ struct MoneyTransferView: View {
                         animationScale = 1.2
                     }
                 }
-            
             Text("Send Money!")
                 .font(.largeTitle)
                 .fontWeight(.heavy)
-            
             VStack(alignment: .leading) {
                 Text("Recipient (Email or Phone)")
                     .font(.headline)
@@ -40,7 +40,6 @@ struct MoneyTransferView: View {
                     .cornerRadius(8)
                     .keyboardType(.emailAddress)
             }
-            
             VStack(alignment: .leading) {
                 Text("Amount (€)")
                     .font(.headline)
@@ -50,7 +49,6 @@ struct MoneyTransferView: View {
                     .cornerRadius(8)
                     .keyboardType(.decimalPad)
             }
-            
             Button {
                 Task {
                     await viewModel.sendMoney()
@@ -66,13 +64,11 @@ struct MoneyTransferView: View {
                 .cornerRadius(8)
             }
             .buttonStyle(PlainButtonStyle())
-            
             if !viewModel.transferMessage.isEmpty {
                 Text(viewModel.transferMessage)
                     .padding(.top, 20)
                     .transition(.move(edge: .top))
             }
-            
             Spacer()
         }
         .padding()

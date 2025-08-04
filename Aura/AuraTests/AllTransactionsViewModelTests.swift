@@ -37,6 +37,7 @@ class AllTransactionsViewModelTests: XCTestCase {
             Transaction(label: "Payment2", value: 500.0)
         ]
         let mockBalance: Double = 650.0
+        
         await viewModel.allTransactions()
         
         XCTAssertEqual(viewModel.transactions, mockTransactions)
