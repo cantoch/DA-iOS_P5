@@ -27,7 +27,7 @@ final class MockAPIService: AuraAPIServiceProtocol {
         return URL(string: "http://127.0.0.1:8080/auth")!
     }
     
-    func createRequest(parameters: [String : Any]?, jsonData: Data?, endpoint: URL, method: AuraAPIService.Method) -> URLRequest {
+    func createRequest(jsonData: Data?, endpoint: URL, method: AuraAPIService.Method) -> URLRequest {
         return URLRequest(url: endpoint)
     }
     
@@ -58,6 +58,24 @@ final class MockAPIService: AuraAPIServiceProtocol {
         }
         return nil
     }
+
+    func fetch(request: URLRequest, allowEmptyData: Bool) async throws -> Data {
+        switch scenario {
+        case .success:
+            return Data()
+        case .decodingError:
+            throw APIError.decodingError
+        case .noToken:
+            throw APIError.unauthorized
+        case .httpError:
+            throw APIError.httpError(statusCode: 500)
+        case .noData:
+            if !allowEmptyData {
+                throw APIError.noData
+            }
+            return Data()
+        }
+    }
 }
 
 final class MockKeychainService: AuraKeychainServiceProtocol {
@@ -76,4 +94,5 @@ final class MockKeychainService: AuraKeychainServiceProtocol {
         saved[key]
     }
 }
+
 

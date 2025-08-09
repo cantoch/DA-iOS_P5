@@ -28,7 +28,7 @@ class AccountViewModel: ObservableObject {
             guard let path = try? apiService.createEndpoint(path: .fetchAccountsDetails) else {
                 return
             }
-            var request = apiService.createRequest(parameters: nil, jsonData: nil, endpoint: path, method: .get)
+            var request = apiService.createRequest(jsonData: nil, endpoint: path, method: .get)
             request.setValue(token, forHTTPHeaderField: "token")
             guard let response = try await apiService.fetchAndDecode(AccountDetail.self, request: request, allowEmptyData: false) else {
                 return
@@ -40,5 +40,6 @@ class AccountViewModel: ObservableObject {
         }
     }
 }
+
 
 

@@ -17,7 +17,7 @@ final class AccountViewModelTests: XCTestCase {
         super.setUp()
         apiService = MockAPIService()
         keychainService = MockKeychainService()
-        keychainService.saved["auth_token"] = "mock_token" 
+        keychainService.saved["auth_token"] = "mock_token"
         viewModel = AccountViewModel(
             keychainService: keychainService,
             apiService: apiService
@@ -52,4 +52,45 @@ final class AccountViewModelTests: XCTestCase {
         XCTAssertTrue(viewModel.transactions.isEmpty)
         XCTAssertEqual(viewModel.currentBalance, 0.0)
     }
+
+    func testAccountFailsWithoutToken() async {
+        keychainService.saved.removeValue(forKey: "auth_token")
+
+        await viewModel.account()
+
+        XCTAssertTrue(viewModel.transactions.isEmpty)
+        XCTAssertEqual(viewModel.currentBalance, 0.0)
+    }
+
+    func testAccountFailsOnHTTPError() async {
+        apiService.scenario = .httpError
+        
+        await viewModel.account()
+        
+        XCTAssertTrue(viewModel.transactions.isEmpty)
+        XCTAssertEqual(viewModel.currentBalance, 0.0)
+    }
+
+    func testAccountFailsWithNoData() async {
+        apiService.scenario = .noData
+        
+        await viewModel.account()
+        
+        XCTAssertTrue(viewModel.transactions.isEmpty)
+        XCTAssertEqual(viewModel.currentBalance, 0.0)
+    }
+
+    func testAccountPreservesDataOnFailure() async {
+        await viewModel.account()
+        let initialTransactions = viewModel.transactions
+        let initialBalance = viewModel.currentBalance
+
+        apiService.scenario = .httpError
+        await viewModel.account()
+        
+        XCTAssertEqual(viewModel.transactions, initialTransactions)
+        XCTAssertEqual(viewModel.currentBalance, initialBalance)
+    }
+
 }
+

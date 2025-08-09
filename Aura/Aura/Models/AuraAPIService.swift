@@ -8,6 +8,13 @@
 
 import Foundation
 
+protocol AuraAPIServiceProtocol {
+    func createEndpoint(path: AuraAPIService.Path) throws -> URL
+    func createRequest(jsonData: Data?, endpoint: URL, method: AuraAPIService.Method) -> URLRequest
+    func fetchAndDecode<T: Decodable>(_ type: T.Type, request: URLRequest, allowEmptyData: Bool) async throws -> T?
+    func fetch(request: URLRequest, allowEmptyData: Bool) async throws -> Data
+}
+
 struct AuraAPIService {
     
     //MARK: -Private properties
@@ -49,16 +56,15 @@ struct AuraAPIService {
     }
     
     //requête
-    func createRequest(parameters: [String: Any]? = nil, jsonData: Data?, endpoint: URL, method: Method) -> URLRequest { 
+    func createRequest(jsonData: Data?, endpoint: URL, method: Method) -> URLRequest {
         var request = URLRequest(url: endpoint)
         request.httpMethod = method.rawValue
-        if parameters != nil {
+
+        if let jsonData = jsonData {
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             request.httpBody = jsonData
-            return request
-        } else {
-            return request
         }
+        return request
     }
     
     //appel réseau
@@ -84,7 +90,7 @@ struct AuraAPIService {
     
     
     func decode<T: Decodable>(_ type: T.Type, data: Data) throws -> T? {
-        guard let responseJSON = try? JSONDecoder().decode(T.self, from: data) else { 
+        guard let responseJSON = try? JSONDecoder().decode(T.self, from: data) else {
             throw APIError.decodingError
         }
         return responseJSON
@@ -99,3 +105,4 @@ struct AuraAPIService {
         return decodedData
     }
 }
+

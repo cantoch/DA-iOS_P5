@@ -8,6 +8,12 @@
 import Security
 import Foundation
 
+protocol AuraKeychainServiceProtocol {
+    func saveToken(token: String, key: String) throws -> Bool
+    func deleteToken(key: String) throws -> Bool
+    func getToken(key: String) throws -> String?
+}
+
 class AuraKeychainService: ObservableObject {
     
     // MARK: - KeychainError
@@ -100,3 +106,4 @@ class AuraKeychainService: ObservableObject {
         return true
     }
 }
+

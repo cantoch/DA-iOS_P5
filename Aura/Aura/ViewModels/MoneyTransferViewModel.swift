@@ -10,17 +10,17 @@ import Foundation
 class MoneyTransferViewModel: ObservableObject {
     private let keychainService: AuraKeychainServiceProtocol
     private let apiService: AuraAPIServiceProtocol
-    
+
     @Published var recipient: String = ""
     @Published var amount: String = ""
     @Published var transferMessage: String = ""
     @Published var errorMessage: String?
-    
+
     init(keychainService: AuraKeychainServiceProtocol, apiService: AuraAPIServiceProtocol) {
         self.keychainService = keychainService
         self.apiService = apiService
     }
-    
+
     @MainActor
     func sendMoney() async {
         guard let amountToDecimal = convertToDecimal(amount) else {
@@ -28,27 +28,26 @@ class MoneyTransferViewModel: ObservableObject {
             transferMessage = ""
             return
         }
-        
+
         let body = TransferRequest(recipient: recipient, amount: amountToDecimal)
-        
+
         guard let token = try? keychainService.getToken(key: "auth_token") else {
             errorMessage = "Echec d'identification"
             return
         }
-        
+
         do {
             let jsonData = try JSONEncoder().encode(body)
             let path = try apiService.createEndpoint(path: .makeTransaction)
-            var request = apiService.createRequest(parameters: nil, jsonData: nil, endpoint: path, method: .post)
+            var request = apiService.createRequest(jsonData: jsonData, endpoint: path, method: .post)
             request.setValue(token, forHTTPHeaderField: "token")
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-            _ = try await apiService.fetchAndDecode(EmptyResponse.self, request: request, allowEmptyData: true)
+            _ = try await apiService.fetch(request: request, allowEmptyData: true)
             transferMessage = "Successfully transferred \(amount)€ to \(recipient)"
         } catch {
             errorMessage = "Erreur lors du transfert"
         }
     }
-    
+
     func convertToDecimal(_ amount: String) -> Decimal? {
         guard let amountDecimal = Decimal(string: amount) else {
             return nil
@@ -56,4 +55,5 @@ class MoneyTransferViewModel: ObservableObject {
         return amountDecimal
     }
 }
+
 

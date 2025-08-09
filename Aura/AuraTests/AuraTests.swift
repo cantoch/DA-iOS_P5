@@ -89,7 +89,7 @@ final class AuraAPIServiceTests: XCTestCase {
             "amount": 15
         ]
         let data: Data? = try JSONSerialization.data(withJSONObject: body, options: [])
-        let request = apiService.createRequest(parameters: body, jsonData: data, endpoint: url, method: method)
+        let request = apiService.createRequest(jsonData: data, endpoint: url, method: method)
         XCTAssertEqual(request.httpMethod, method.rawValue)
         XCTAssertEqual(request.url, url)
         XCTAssertEqual(request.httpBody, data)
@@ -232,4 +232,5 @@ final class AuraAPIServiceTests: XCTestCase {
         }
     }
 }
+
 
